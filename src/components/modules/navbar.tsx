@@ -1,6 +1,21 @@
 import Link from "next/link";
 
+interface NavItem {
+  href: string;
+  label: string;
+}
+
 export default function Navbar() {
+  const navItems: NavItem[] = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/contact", label: "Contact" },
+    {
+      href: "/blogs",
+      label: "Blogs",
+    },
+  ];
+
   return (
     <nav className="bg-white shadow-md border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,24 +26,15 @@ export default function Navbar() {
             </Link>
           </div>
           <div className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/"
-              className="text-gray-900 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Home
-            </Link>
-            <Link
-              href="/about"
-              className="text-gray-900 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              About
-            </Link>
-            <Link
-              href="/contact"
-              className="text-gray-900 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Contact
-            </Link>
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-gray-900 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
           {/* Mobile menu button - can be expanded later */}
           <div className="md:hidden flex items-center">

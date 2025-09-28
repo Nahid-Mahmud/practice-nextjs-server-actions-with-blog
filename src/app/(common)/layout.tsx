@@ -4,7 +4,7 @@ export default function CommonLayout({ children }: { children: React.ReactNode }
   return (
     <div>
       <Navbar />
-      {children}
+      <div className="container mx-auto p-4">{children}</div>
     </div>
   );
 }
