@@ -22,9 +22,26 @@ export async function generateStaticParams() {
   }
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  try {
+    const res = await fetch(`${envVariables.NEXT_PUBLIC_API_URL}/post/${id}`);
+    const blog: Post = await res.json();
+
+    return {
+      title: blog.title,
+      description: blog.content.slice(0, 150),
+      image: blog.thumbnail,
+    };
+  } catch (error) {
+    console.error(`Failed to fetch blog metadata for id ${id}:`, error);
+    return {};
+  }
+}
+
 // Blog details page
-export default async function BlogDetailsPage({ params }: { params: { id: string } }) {
-  const { id } = params;
+export default async function BlogDetailsPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   try {
     const res = await fetch(`${envVariables.NEXT_PUBLIC_API_URL}/post/${id}`);
