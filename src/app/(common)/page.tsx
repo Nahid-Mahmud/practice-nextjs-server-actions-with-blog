@@ -5,7 +5,7 @@ import BlogCard from "@/components/modules/BlogCard";
 export default async function Home() {
   const res = await fetch(`${envVariables.NEXT_PUBLIC_API_URL}/post`, {
     next: {
-      revalidate: 30,
+      tags: ["posts"],
     },
   });
   const { data: posts }: { data: Post[] } = await res.json();

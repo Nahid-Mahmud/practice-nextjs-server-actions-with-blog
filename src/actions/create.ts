@@ -1,5 +1,8 @@
 "use server";
 
+import { revalidatePath, revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
+
 const backendUrl = process.env.NEXT_PUBLIC_API_URL;
 
 async function createBlogPost(data: FormData) {
@@ -15,26 +18,28 @@ async function createBlogPost(data: FormData) {
 
   const modifiedData = { title, content, thumbnail, isFeatured, tags, authorId };
 
-  try {
-    const response = await fetch(`${backendUrl}/post`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(modifiedData),
-    });
+  const response = await fetch(`${backendUrl}/post`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(modifiedData),
+  });
 
-    if (!response.ok) {
-      throw new Error("Failed to create blog post");
-    }
-
-    const result = await response.json();
-    console.log("Blog post created successfully:", result);
-  } catch (error) {
-    console.error("Error creating blog post:", error);
+  if (!response.ok) {
+    throw new Error("Failed to create blog post");
   }
 
-  console.log({ modifiedData });
+  const result = await response.json();
+  console.log("Blog post created successfully:", result);
+
+  // Revalidate the cache for the home page
+
+  if (response.ok) {
+    // revalidatePath("/");
+    revalidateTag("posts");
+    redirect("/");
+  }
 }
 
 export { createBlogPost };
